@@ -4,10 +4,10 @@ const morgan = require("morgan");
 
 // Routes
 const authRoutes = require("./routes/auth");
-const staffRoutes = require("./routes/staff"); // à créer plus tard
-// const menuRoutes = require("./routes/menu"); // futur
-// const orderRoutes = require("./routes/orders"); // futur
+const staffRoutes = require("./routes/staff");
 const supplierRoutes = require("./routes/supplier");
+const stockRoutes = require("./routes/stock");
+
 const app = express();
 
 // Middlewares globaux
@@ -20,10 +20,10 @@ app.get("/", (req, res) => {
 	res.send("Hello from backend!");
 });
 
-// Routes
-app.use("/api/auth", authRoutes); // /api/auth/register, /api/auth/login
-app.use("/api/staff", staffRoutes); // /api/staff → protégé par middleware
-// app.use("/api/menu", menuRoutes); // futur
-// app.use("/api/orders", orderRoutes); // futur
-app.use("/api/suppliers", supplierRoutes); // /api/suppliers
+// Routes montées
+app.use("/api/auth", authRoutes);
+app.use("/api/staff", staffRoutes);
+app.use("/api/suppliers", supplierRoutes);
+app.use("/api/stock", stockRoutes); // ← ici, après les middlewares
+
 module.exports = app;
