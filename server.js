@@ -8,10 +8,8 @@ const PORT = process.env.PORT || 5000;
 
 // Connexion DB
 mongoose
-	.connect(process.env.MONGO_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(process.env.MONGO_URI)
+
 	.then(() => {
 		console.log("✅ MongoDB connectée");
 		// On démarre le serveur seulement après la connexion DB
