@@ -7,7 +7,7 @@ const authRoutes = require("./routes/auth");
 const staffRoutes = require("./routes/staff");
 const supplierRoutes = require("./routes/supplier");
 const stockRoutes = require("./routes/stock");
-
+const infoRoutes = require("./routes/Info");
 const app = express();
 
 // Middlewares globaux
@@ -23,7 +23,8 @@ app.get("/", (req, res) => {
 // Routes montées
 app.use("/api/auth", authRoutes);
 app.use("/api/staff", staffRoutes);
-app.use("/api/suppliers", supplierRoutes);
+app.use("/api/supplier", supplierRoutes);
+app.use("/api/info", infoRoutes);
 app.use("/api/stock", stockRoutes); // ← ici, après les middlewares
 
 module.exports = app;

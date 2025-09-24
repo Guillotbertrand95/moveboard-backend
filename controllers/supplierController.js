@@ -2,8 +2,10 @@ const Supplier = require("../models/Supplier");
 
 // Créer un fournisseur (Manager only)
 exports.createSupplier = async (req, res) => {
+	const { name, email, phone } = req.body;
+	const managerId = req.user.id; // fourni par authMiddleware
 	try {
-		const supplier = new Supplier(req.body);
+		const supplier = new Supplier({ name, email, phone, managerId });
 		await supplier.save();
 		res.status(201).json(supplier);
 	} catch (error) {
