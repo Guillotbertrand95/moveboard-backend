@@ -10,7 +10,12 @@ const TaskSchema = new mongoose.Schema({
 	date: { type: Date, required: true },
 	title: { type: String, required: true },
 	description: { type: String },
-	status: { type: String, enum: ["en cours", "fait"], default: "en cours" },
+	status: {
+		type: String,
+		enum: ["À faire", "En cours", "Terminé"],
+		default: "À faire",
+	},
+
 	timestamp: { type: Date, default: Date.now },
 });
 

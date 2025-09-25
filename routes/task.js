@@ -1,22 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { createTask, getTaskByDate } = require("../controllers/taskController");
+const taskController = require("../controllers/taskController");
 const authMiddleware = require("../middlewares/authMiddleware");
-const roleMiddleware = require("../middlewares/roleMiddleware.js");
 
-// staff crée une tâche
-router.post(
-	"/",
-	authMiddleware,
-	roleMiddleware(["staff", "manager"]),
-	createTask
-);
-// récupérer les tâches par date
-router.get(
-	"/",
-	authMiddleware,
-	roleMiddleware(["staff", "manager"]),
-	getTaskByDate
-);
+// Récupérer les tâches
+router.get("/", authMiddleware, taskController.getTasksByStaffAndDate);
+
+// Ajouter une tâche
+router.post("/", authMiddleware, taskController.addTask);
+
+// Mettre à jour une tâche
+router.put("/:id", authMiddleware, taskController.updateTask);
+
+// Supprimer une tâche
+router.delete("/:id", authMiddleware, taskController.deleteTask);
 
 module.exports = router;
