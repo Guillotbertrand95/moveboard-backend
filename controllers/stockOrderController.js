@@ -1,21 +1,27 @@
-// controllers/stockOrderController.js
 const Order = require("../models/StockOrder");
 
-// créer une commande
+// ------------------- CREATE -------------------
 exports.createOrder = async (req, res) => {
 	try {
-		const { date, supplier, items } = req.body;
+		const { date, title, content, selectedStaffId } = req.body;
+
+		if (!selectedStaffId || !title || !date) {
+			return res.status(400).json({
+				message: "selectedStaffId, title et date sont requis",
+			});
+		}
 
 		const newOrder = new Order({
-			date,
-			supplier,
-			items,
-			createdBy: req.user._id, // correspond bien au modèle
+			date: new Date(date),
+			title,
+			content,
+			createdBy: selectedStaffId, // le collaborateur choisi dans le front
 		});
 
 		await newOrder.save();
 		res.status(201).json(newOrder);
 	} catch (error) {
+		console.error("Erreur création commande :", error);
 		res.status(500).json({
 			message: "Erreur lors de la création de la commande",
 			error,
@@ -23,22 +29,32 @@ exports.createOrder = async (req, res) => {
 	}
 };
 
-// récupérer les commandes d'une date précise
-// récupérer les commandes filtrées par date et staff
+// ------------------- READ -------------------
 exports.getOrdersByDate = async (req, res) => {
 	try {
-		const { staffId, date } = req.query; // <- récupère query params
+		const { staffId, date } = req.query;
 
 		const filter = {};
-		if (staffId) filter.createdBy = staffId; // ou 'staff' si ton modèle utilise un champ différent
-		if (date) filter.date = new Date(date);
+		if (staffId) filter.createdBy = staffId; // filtrer par collaborateur choisi
 
-		const orders = await Order.find(filter)
-			.populate("supplier") // récupère les infos du fournisseur
-			.populate("createdBy", "username role"); // récupère seulement username et rôle du User
+		if (date) {
+			const start = new Date(date);
+			start.setHours(0, 0, 0, 0);
+			const end = new Date(date);
+			end.setHours(23, 59, 59, 999);
+			filter.date = { $gte: start, $lte: end };
+		}
+
+		console.log("Filtre MongoDB:", filter);
+
+		const orders = await Order.find(filter).populate(
+			"createdBy",
+			"username firstname role"
+		); // infos collaborateur
 
 		res.status(200).json(orders);
 	} catch (error) {
+		console.error("Erreur récupération commandes :", error);
 		res.status(500).json({
 			message: "Erreur lors de la récupération des commandes",
 			error,

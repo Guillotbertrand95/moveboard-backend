@@ -1,25 +1,18 @@
 const mongoose = require("mongoose");
-const OrderSchema = new mongoose.Schema(
+
+const StockOrderSchema = new mongoose.Schema(
 	{
 		date: { type: Date, required: true },
-		supplier: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Supplier",
-			required: true,
-		},
-		items: [
-			{
-				productName: String,
-				quantity: Number,
-				price: Number,
-			},
-		],
+		title: { type: String, required: true },
+		content: { type: String },
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
 		},
+		status: { type: String, default: "Disponible" },
 	},
 	{ timestamps: true }
 );
-module.exports = mongoose.model("StockOrder", OrderSchema);
+
+module.exports = mongoose.model("StockOrder", StockOrderSchema);
