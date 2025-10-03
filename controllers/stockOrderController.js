@@ -24,11 +24,16 @@ exports.createOrder = async (req, res) => {
 };
 
 // récupérer les commandes d'une date précise
+// récupérer les commandes filtrées par date et staff
 exports.getOrdersByDate = async (req, res) => {
 	try {
-		const { date } = req.params;
+		const { staffId, date } = req.query; // <- récupère query params
 
-		const orders = await Order.find({ date: new Date(date) })
+		const filter = {};
+		if (staffId) filter.createdBy = staffId; // ou 'staff' si ton modèle utilise un champ différent
+		if (date) filter.date = new Date(date);
+
+		const orders = await Order.find(filter)
 			.populate("supplier") // récupère les infos du fournisseur
 			.populate("createdBy", "username role"); // récupère seulement username et rôle du User
 

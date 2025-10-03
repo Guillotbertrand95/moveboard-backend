@@ -15,9 +15,8 @@ router.post(
 	createOrder
 );
 
-// Récupérer une commande de stock par date
 router.get(
-	"/:date",
+	"/",
 	authMiddleware,
 	roleMiddleware(["staff", "manager"]),
 	getOrdersByDate
